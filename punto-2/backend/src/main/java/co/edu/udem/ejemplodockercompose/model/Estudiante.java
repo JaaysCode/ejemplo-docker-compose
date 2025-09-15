@@ -1,6 +1,5 @@
 package co.edu.udem.ejemplodockercompose.model;
 
-
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 

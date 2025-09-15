@@ -22,4 +22,8 @@ public class EstudianteService {
     public Estudiante create(Estudiante estudiante) {
         return estudianteRepository.save(estudiante);
     }
+
+    public void deleteById(Long id) {
+        this.estudianteRepository.deleteById(id);
+    }
 }

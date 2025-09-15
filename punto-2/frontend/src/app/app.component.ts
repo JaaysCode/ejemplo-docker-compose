@@ -1,17 +1,21 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { EstudiantesService } from "./services/estudiantes.service";
-import { Estudiante } from "./models/estudiante.model";
-
+import { EstudiantesService } from './services/estudiantes.service';
+import { Estudiante } from './models/estudiante.model';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -27,7 +31,10 @@ export class AppComponent implements OnInit {
     this.form = this.fb.group({
       nombres: ['', [Validators.required, Validators.maxLength(100)]],
       apellidos: ['', [Validators.required, Validators.maxLength(100)]],
-      email: ['', [Validators.required, Validators.email, Validators.maxLength(200)]],
+      email: [
+        '',
+        [Validators.required, Validators.email, Validators.maxLength(200)],
+      ],
     });
     this.cargarEstudiantes();
   }
@@ -36,7 +43,8 @@ export class AppComponent implements OnInit {
     this.cargando = true;
     this.error = null;
     try {
-      this.estudiantes = await this.estudiantesService.getAll().toPromise() || [];
+      this.estudiantes =
+        (await this.estudiantesService.getAll().toPromise()) || [];
     } catch (e: any) {
       this.error = e?.message ?? 'Error al cargar estudiantes';
     } finally {
@@ -57,6 +65,24 @@ export class AppComponent implements OnInit {
       }
     } catch (e: any) {
       this.error = e?.message ?? 'Error al crear estudiante';
+    } finally {
+      this.cargando = false;
+    }
+  }
+
+  async onDelete(id: number) {
+    if (!confirm('¿Estás seguro de que quieres eliminar este estudiante?')) {
+      return;
+    }
+
+    this.cargando = true;
+    this.error = null;
+
+    try {
+      await this.estudiantesService.delete(id).toPromise();
+      await this.cargarEstudiantes();
+    } catch (e: any) {
+      this.error = e?.message ?? 'Error al eliminar estudiante';
     } finally {
       this.cargando = false;
     }

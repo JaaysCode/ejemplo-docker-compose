@@ -44,3 +44,17 @@ yarn-debug.log*
 yarn-error.log*
 .npm
 .eslintcache
+pnpm-lock.yaml
+
+# Frontend build files
+**/dist/
+**/build/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker
+.dockerignore

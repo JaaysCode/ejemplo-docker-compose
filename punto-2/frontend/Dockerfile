@@ -1,13 +1,16 @@
-# Stage 1: Generar bundle
-FROM node:alpine as build
+# STAGE 1 -> Generar el bundle del código de Angular
+FROM node:alpine AS build
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm install
+#Dependencias del proyecto
 
-COPY . . 
+COPY package.json package-lock.json ./
+
+RUN npm install
+COPY . .
 RUN npm run build
+
 
 # Stage 2: Crear imagen sobre nginx
 
@@ -16,5 +19,5 @@ COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
-CMD [ "nginx", "-g", "daemon off;"]
 
+CMD ["nginx", "-g", "daemon off;"]

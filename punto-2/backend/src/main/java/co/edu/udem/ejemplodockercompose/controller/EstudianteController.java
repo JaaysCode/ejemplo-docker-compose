@@ -2,6 +2,8 @@ package co.edu.udem.ejemplodockercompose.controller;
 
 import co.edu.udem.ejemplodockercompose.model.Estudiante;
 import co.edu.udem.ejemplodockercompose.service.EstudianteService;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +19,24 @@ public class EstudianteController {
     }
 
     @GetMapping("/saludo")
-    public String holaMundo(){
+    public String holaMundo() {
         return "Hola Mundo";
     }
 
     @GetMapping("/estudiantes")
-    public List<Estudiante> getEstudiantes(){
+    public List<Estudiante> getEstudiantes() {
         return estudianteService.findAll();
     }
 
     @PostMapping("/estudiantes")
     public Estudiante createEstudiante(@RequestBody Estudiante estudiante) {
+        estudiante.setId(null);
         return estudianteService.create(estudiante);
+    }
+
+    @DeleteMapping("/estudiantes/{id}")
+    public ResponseEntity<Void> deleteEstudiante(@PathVariable Long id) {
+        estudianteService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
